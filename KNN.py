@@ -2,8 +2,18 @@ import numpy as np
 from collections import Counter
 
 class KNN:
-    def __init__(self,k=3):
+    def __init__(self,k=3,metric='manhattan'):
         self.k = k
+        self.metric= metric.lower()
+
+        if self.metric=='manhattan':
+            self._distance = self._manhattan_distance
+        elif self.metric=='euclidean':
+            self._distance = self._euclidean_distance
+        else:
+            raise ValueError("metric must be 'manhattan' or 'euclidean'")
+
+        
 
     def fit(self,X,y):
         self.X_train = X
@@ -19,8 +29,7 @@ class KNN:
         distances = []
 
         for x_train in self.X_train:
-            distance = self._euclidean_distance(x,x_train)
-            distances.append(distance)
+            distances.append(self._distance(x,x_train))
 
         k_indices = np.argsort(distances)[:self.k]
 
