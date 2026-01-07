@@ -12,6 +12,9 @@ class KNN:
     def _euclidean_distance(self,x1,x2):
         return np.sqrt(np.sum((x1-x2)**2))
     
+    def _manhattan_distance(self,x1,x2):
+            return np.sum(np.abs(x1-x2))
+    
     def _predict_single(self,x):
         distances = []
 
