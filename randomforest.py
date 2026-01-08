@@ -16,3 +16,61 @@ class DecisionTree:
         self.min_samples_split = min_samples_split
         self.max_features = max_features
         self.root = None
+    def _gini(self, y):
+        classes, counts = np.unique(y, return_counts=True)
+        probs = counts / counts.sum()
+        return 1 - np.sum(probs ** 2)
+    def _split(self, X, y, feature, threshold):
+        left = X[:, feature] <= threshold
+        right = X[:, feature] > threshold
+        return X[left], X[right], y[left], y[right]
+    def _best_split(self, X, y):
+        best_gini = float("inf")
+        best_feature, best_threshold = None, None
+
+        n_samples, n_features = X.shape
+
+        features = np.random.choice(
+            n_features,
+            self.max_features,
+            replace=False
+        )
+
+        for feature in features:
+            thresholds = np.unique(X[:, feature])
+            for threshold in thresholds:
+                X_l, X_r, y_l, y_r = self._split(X, y, feature, threshold)
+
+                if len(y_l) == 0 or len(y_r) == 0:
+                    continue
+
+                gini = (
+                    len(y_l) / len(y) * self._gini(y_l) +
+                    len(y_r) / len(y) * self._gini(y_r)
+                )
+
+                if gini < best_gini:
+                    best_gini = gini
+                    best_feature = feature
+                    best_threshold = threshold
+
+        return best_feature, best_threshold
+    def _build_tree(self, X, y, depth):
+        if (
+            depth >= self.max_depth or
+            len(y) < self.min_samples_split or
+            len(np.unique(y)) == 1
+        ):
+            return Node(value=self._most_common_label(y))
+
+        feature, threshold = self._best_split(X, y)
+
+        if feature is None:
+            return Node(value=self._most_common_label(y))
+
+        X_l, X_r, y_l, y_r = self._split(X, y, feature, threshold)
+
+        left = self._build_tree(X_l, y_l, depth + 1)
+        right = self._build_tree(X_r, y_r, depth + 1)
+
+        return Node(feature, threshold, left, right)
