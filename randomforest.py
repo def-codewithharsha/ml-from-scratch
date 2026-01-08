@@ -74,3 +74,18 @@ class DecisionTree:
         right = self._build_tree(X_r, y_r, depth + 1)
 
         return Node(feature, threshold, left, right)
+    def _most_common_label(self, y):
+        return Counter(y).most_common(1)[0][0]
+
+    def fit(self, X, y):
+        self.root = self._build_tree(X, y, 0)
+
+    def _predict_sample(self, x, node):
+        if node.value is not None:
+            return node.value
+        if x[node.feature] <= node.threshold:
+            return self._predict_sample(x, node.left)
+        return self._predict_sample(x, node.right)
+
+    def predict(self, X):
+        return np.array([self._predict_sample(x, self.root) for x in X])
