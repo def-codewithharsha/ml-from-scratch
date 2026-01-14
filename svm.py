@@ -11,9 +11,7 @@ class LinearSVM:
 
     def fit(self, X, y):
 
-        _, n_features = X.shape
-
-        
+        _, n_features = X.shape        
         self.w = np.zeros(n_features)
         self.b = 0
 

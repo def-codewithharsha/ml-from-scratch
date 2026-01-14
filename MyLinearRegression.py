@@ -32,15 +32,18 @@ class MyLinearRegression:
 
         # Gradient Descent
         for i in range(self.num_of_iterations):
+
             self.update_weights()
+
             if self.verbose and i % 100 == 0:
+                
                 cost = self.compute_cost(self.Y, self.predict(self.X))
                 print(f"Iteration {i}, Cost: {cost:.4f}")
 
     def update_weights(self):
-        """
-        Perform one step of gradient descent.
-        """
+        
+        # Perform one step of gradient descent.
+        
         Y_prediction = self.predict(self.X)
 
         # Gradients
@@ -65,6 +68,6 @@ class MyLinearRegression:
 
     def compute_cost(self, Y, Y_prediction):
         """
-        Compute Mean Squared Error cost.
+        Compute Mean Squared Error cost (MSE)
         """
         return np.mean((Y - Y_prediction) ** 2)
