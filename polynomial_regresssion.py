@@ -20,5 +20,7 @@ class PolynomialRegression:
 
             gradients = (2 / len(X))* (X_poly.T @ error)
             self.weights-=self.lr*gradients
-
+    def predict(self, X):
+        X_poly = self._poly_features(X)
+        return X_poly @ self.weights
     
