@@ -1,4 +1,3 @@
-# Loss Funtion : J(w,b)=1/m ​∑(y−y^​)**2+λ∑∣w∣
 import numpy as np
 
 class LassoRegression:
